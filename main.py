@@ -3,8 +3,15 @@ from pydantic import BaseModel
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
+import os, json
 
-cred = credentials.Certificate(key)
+# 🔑 Load Firebase key from Render ENV
+firebase_key = os.getenv("FIREBASE_KEY")
+
+if not firebase_key:
+    raise Exception("FIREBASE_KEY not found")
+
+cred = credentials.Certificate(json.loads(firebase_key))
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
